@@ -1,23 +1,29 @@
-0001 /******************************************************************************************
-0002  * Data Structures in C++
-0003  * ISBN: 7-302-33064-6 & 7-302-33065-3 & 7-302-29652-2 & 7-302-26883-3
-0004  * Junhui DENG, deng@tsinghua.edu.cn
-0005  * Computer Science & Technology, Tsinghua University
-0006  * Copyright (c) 2003-2019. All rights reserved.
-0007  ******************************************************************************************/
-0008 
-0009 template <typename T> //从当前节点出发，沿左分支不断深入，直至没有左分支的节点
-0010 static void goAlongVine ( BinNodePosi(T) x, Stack<BinNodePosi(T)>& S ) {
-0011    while ( x ) { S.push ( x ); x = x->lc; } //当前节点入栈后随即向左侧分支深入，迭代直到无左孩子
-0012 }
-0013 
-0014 template <typename T, typename VST> //元素类型、操作器
-0015 void travIn_I1 ( BinNodePosi(T) x, VST& visit ) { //二叉树中序遍历算法（迭代版#1）
-0016    Stack<BinNodePosi(T)> S; //辅助栈
-0017    while ( true ) {
-0018       goAlongVine ( x, S ); //从当前节点出发，逐批入栈
-0019       if ( S.empty() ) break; //直至所有节点处理完毕
-0020       x = S.pop(); visit ( x->data ); //弹出栈顶节点并访问之
-0021       x = x->rc; //转向右子树
-0022    }
-0023 }
+/******************************************************************************************
+* Data Structures in C++
+* ISBN: 7-302-33064-6 & 7-302-33065-3 & 7-302-29652-2 & 7-302-26883-3
+* Johnny Li, 707328350@qq.com
+* ~
+* Copyright (c) 2019-2020. All rights reserved.
+******************************************************************************************/ 
+/******************************************************************************************
+* 二叉树的中序遍历迭代版1，利用栈记录所有的左孩子，直到没有左孩子开始处理栈中的节点.
+******************************************************************************************/ 
+//处理以x为节点的树，将这棵树的根以及所有左子树存放到栈S中
+template <typename T>
+static void goAlongLeftBranch(BinNOdePosi<T> x, Stack<BinNOdePosi<T> &S>) {
+	while (NULL != x) {
+		S.push(x);
+		x = x->lc;
+	}
+}
+template <typename T, typename VST>
+void BinTree<T>::travIn_I1(BinNOdePosi<T> x, VST& visit) {
+	Stack<BinNOdePosi<T>> S;
+	while (TRUE) {
+		goAlongLeftBranch(x, S); //处理以x为节点的树，将这棵树的根以及所有左子树存放到栈S中
+		if (S.empty) break;  //栈中所有的元素都访问完即可退出
+		x = S.top(); S.pop(); //从栈顶弹出元素，即可开始访问
+		visit(x->data);
+		x = x->rc;  //处理它的右子树
+	}
+}
